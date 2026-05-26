@@ -1,18 +1,18 @@
-import { stack } from './stack.js';
+import { forceTracking, isTracking, stack } from './stack.js';
 
 const disposed = new WeakSet;
 const effects = new WeakMap;
 const batches = [];
 
 let batching = false;
-let tracking = true;
 
 export const batch = callback => {
-  const before = batching;
-  if (!before) batching = true;
+  const handle = !batching;
+  if (handle) batching = true;
   try { callback() }
   finally {
-    if (!before) {
+    if (handle) {
+      batching = false;
       for (const [subscriber, run] of batches.splice(0)) {
         if (!disposed.has(subscriber)) run();
       }
@@ -54,9 +54,9 @@ export const effect = callback => {
 
   const run = () => {
     while (invalid) {
+      invalid = false;
       cleanUp(subscriber);
       stack.push(subscriber);
-      invalid = false;
       try { callback() }
       finally {
         stack.pop();
@@ -77,8 +77,8 @@ export const effect = callback => {
 };
 
 export const untracked = callback => {
-  const before = tracking;
-  if (before) tracking = false;
+  const before = isTracking();
+  if (before) forceTracking(false); 
   try { callback() }
-  finally { tracking = before }
+  finally { forceTracking(before) }
 };

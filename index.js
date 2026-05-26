@@ -40,21 +40,9 @@ const fn = name => () => {
 };
 
 setTimeout(batch, 1000, fn('batch 1'));
-setTimeout(batch, 2000, fn('batch 2'));
-
-// setTimeout(untracked, 2000, () => {
-//   console.log('untracked 2');
-//   s1.value++;
-//   s2.value++;
-//   s3.value++;
-// });
-
-// setTimeout(() => {
-//   console.log('batch 3');
-//   s1.value++;
-//   s2.value++;
-//   s3.value++;
-// }, 3000);
+setTimeout(untracked, 2000, fn('untracked 1'));
+// setTimeout(fn('direct 1'), 3000);
+setTimeout(batch, 3000, fn('batch 2'));
 
 // effect(() => {
 //   console.log('c1', c1.value);
