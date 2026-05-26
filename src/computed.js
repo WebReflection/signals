@@ -1,6 +1,8 @@
 import { push, stack } from './stack.js';
 
 export const computed = callback => {
+  let subscribers = new Set, invalid = true, value;
+
   const subscriber = () => {
     if (invalid) return;
     invalid = true;
@@ -8,8 +10,6 @@ export const computed = callback => {
     subscribers = new Set;
     for (const sub of set) sub();
   };
-
-  let subscribers = new Set, invalid = true, value;
 
   return {
     get value() {

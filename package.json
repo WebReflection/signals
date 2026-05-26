@@ -1,24 +1,31 @@
 {
-  "name": "signals",
+  "name": "@webreflection/signals",
   "version": "0.0.0",
-  "description": "",
+  "description": "A minimalistic Preact-like signals implementation",
   "main": "src/index.js",
   "module": "src/index.js",
+  "files": [
+    "dist/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
   "exports": {
     ".": "./src/index.js",
     "./disposable": "./src/disposable.js",
-    "./disp": "./disposable.js",
-    "./dist": "./signals.js",
+    "./disp": "./dist/disposable.js",
+    "./dist": "./dist/signals.js",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "npm run build:dist && npm run build:disp",
-    "build:dist": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=signals.js",
-    "build:disp": "esbuild src/disposable.js --bundle --minify --platform=neutral --format=esm --outfile=disposable.js",
+    "build": "npm run build:dist && npm run build:disp && npm run size",
+    "build:dist": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=dist/signals.js",
+    "build:disp": "esbuild src/disposable.js --bundle --minify --platform=neutral --format=esm --outfile=dist/disposable.js",
+    "size": "echo 'signals'; cat dist/signals.js | brotli | wc -c; echo '\ndisposable'; cat dist/disposable.js | brotli | wc -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["signals", "effect", "signal", "computed", "batch", "untracked", "Preact", "minimalistic", "disposable"],
+  "author": "Andrea Giammarchi",
   "license": "MIT",
   "type": "module",
   "devDependencies": {
