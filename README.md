@@ -26,7 +26,7 @@ import {
   effect,
   signal,
   untracked,
-} from '@webreflection/signals';
+} from '@webreflection/disposable';
 ```
 
 ### In Depth
