@@ -1,5 +1,5 @@
 import { computed } from './computed.js';
-import { effect } from './effect.js';
+import { batch, effect } from './effect.js';
 import { signal } from './signal.js';
 
-export { computed, effect, signal };
+export { batch, computed, effect, signal };

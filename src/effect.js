@@ -3,6 +3,20 @@ import { stack } from './stack.js';
 const disposed = new WeakSet;
 const effects = new WeakMap;
 
+let batches = null;
+
+export const batch = callback => {
+  batches = [];
+  try { callback() }
+  finally {
+    const stack = batches;
+    batches = null;
+    for (const [subscriber, run] of stack) {
+      if (!disposed.has(subscriber)) run();
+    }
+  }
+};
+
 const cleanUp = subscriber => {
   const subscribers = effects.get(subscriber);
   const length = subscribers.length;
@@ -26,16 +40,11 @@ export const dispose = subscriber => {
 export const effect = callback => {
   const subscriber = () => {
     if (invalid || disposed.has(subscriber)) return;
-
     invalid = true;
-
-    // run only if top of the stack
-    if (!stack.length) run();
-
-    // ⚠️ before:
-    // run with no stack or when latest stack is not the same one
-    // const length = stack.length;
-    // if (length < 1 || stack[length - 1] !== subscriber) run();
+    if (!stack.length) {
+      if (batches) batches.push([subscriber, run]);
+      else run();
+    }
   };
 
   const run = () => {
