@@ -67,10 +67,11 @@ There are tons of tests I need to do to be sure all the things are actually work
 
 #### The Beauty
 
-  * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 25 LOC
-  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 30 LOC
-  * the shared [stack](https://github.com/WebReflection/signals/blob/main/src/stack.js) is 16 LOC
-  * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 84 LOC
-  * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 12 LOC, based on the core library mentioned in previous points
+  * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 25 LOC.
+  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 30 LOC.
+  * the shared [stack](https://github.com/WebReflection/signals/blob/main/src/stack.js) is 16 LOC.
+  * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 84 LOC.
+  * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 12 LOC, based on the core library mentioned in previous points.
+  * [branded](https://github.com/WebReflection/signals/blob/main/src/branded.js) is 21 LOC extra needed only for libraries building on top.
 
 I mean ... that's coding, isn't it ... today I really needed something that would remind me why I love what I do ❤️
