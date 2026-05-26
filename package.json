@@ -6,11 +6,15 @@
   "module": "src/index.js",
   "exports": {
     ".": "./src/index.js",
+    "./disposable": "./src/disposable.js",
+    "./disp": "./disposable.js",
     "./dist": "./signals.js",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=signals.js",
+    "build": "npm run build:dist && npm run build:disp",
+    "build:dist": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=signals.js",
+    "build:disp": "esbuild src/disposable.js --bundle --minify --platform=neutral --format=esm --outfile=disposable.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,5 +1,6 @@
-import { batch, computed, effect, signal, untracked } from './signals.js';
+import { batch, computed, disposable, effect, signal, untracked } from './disposable.js';
 
+// TEST 0
 // const s = signal(1);
 // const c = computed(() => s.value + 1);
 
@@ -16,6 +17,8 @@ import { batch, computed, effect, signal, untracked } from './signals.js';
 //   console.log(c.value);
 // }, 1000);
 
+
+// TEST 1 & 2
 const s1 = signal(1);
 const s2 = signal(2);
 const s3 = signal(3);
@@ -23,6 +26,7 @@ const s3 = signal(3);
 const c1 = computed(() => (s1.value + s2.value));
 const c2 = computed(() => (s3.value + c1.value));
 
+// TEST 1
 // let count = 0;
 
 // effect(() => {
@@ -44,6 +48,8 @@ const c2 = computed(() => (s3.value + c1.value));
 // // setTimeout(fn('direct 1'), 3000);
 // setTimeout(batch, 3000, fn('batch 2'));
 
+
+// TEST 2
 effect(() => {
   console.log('c1', c1.value);
   // console.log('c2', c2.value);
@@ -81,3 +87,34 @@ setTimeout(() => {
 setTimeout(() => {
   s1.value++;
 }, 3000);
+
+
+// TEST 3
+// const CounterModel = disposable((initialCount = 0) => {
+//   const count = signal(initialCount);
+//   const doubled = computed(() => count.value * 2);
+
+//   effect(() => {
+//     console.log("Count changed:", count.value);
+//   });
+
+//   return {
+//     count,
+//     doubled,
+//     increment() {
+//       count.value++;
+//     },
+//   };
+// });
+
+
+// setTimeout(() => {
+//   const counter = new CounterModel(5);
+
+//   counter.increment();
+//   console.log('direct', counter.doubled.value);
+
+//   counter[Symbol.dispose]();
+
+//   for (let i = 0; i < 1000; i++) counter.increment();
+// }, 5000);
