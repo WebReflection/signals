@@ -6,9 +6,9 @@ export const computed = callback => {
   const subscriber = () => {
     if (invalid) return;
     invalid = true;
-    const set = subscribers;
+    const before = subscribers;
     subscribers = new Set;
-    for (const sub of set) sub();
+    for (const subscriber of before) subscriber();
   };
 
   return {

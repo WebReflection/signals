@@ -1,4 +1,4 @@
-import { batch, computed, disposable, effect, signal, untracked } from './disposable.js';
+import { batch, computed, disposable, effect, signal, untracked } from '../dist/disposable.js';
 
 // TEST 0
 // const s = signal(1);

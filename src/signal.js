@@ -12,9 +12,9 @@ export const signal = current => {
     set value(value) {
       current = value;
       if (isTracking()) {
-        const set = subscribers;
+        const before = subscribers;
         subscribers = new Set;
-        for (const sub of set) sub();
+        for (const subscriber of before) subscriber();
       }
     },
 
