@@ -2,17 +2,19 @@ import { stack } from './stack.js';
 
 const disposed = new WeakSet;
 const effects = new WeakMap;
+const batches = [];
 
-let batches = null;
+let batching = false;
 
 export const batch = callback => {
-  batches = [];
+  const before = batching;
+  if (!before) batching = true;
   try { callback() }
   finally {
-    const stack = batches;
-    batches = null;
-    for (const [subscriber, run] of stack) {
-      if (!disposed.has(subscriber)) run();
+    if (!before) {
+      for (const [subscriber, run] of batches.splice(0)) {
+        if (!disposed.has(subscriber)) run();
+      }
     }
   }
 };
@@ -26,15 +28,15 @@ const cleanUp = subscriber => {
   }
 };
 
+export const dispose = subscriber => {
+  if (!effects.has(subscriber)) return;
+  drop(subscriber);
+};
+
 const drop = subscriber => {
   disposed.add(subscriber);
   cleanUp(subscriber);
   effects.delete(subscriber);
-};
-
-export const dispose = subscriber => {
-  if (!effects.has(subscriber)) return;
-  drop(subscriber);
 };
 
 export const effect = callback => {
@@ -42,7 +44,7 @@ export const effect = callback => {
     if (invalid || disposed.has(subscriber)) return;
     invalid = true;
     if (!stack.length) {
-      if (batches) batches.push([subscriber, run]);
+      if (batching) batches.push([subscriber, run]);
       else run();
     }
   };
