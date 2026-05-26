@@ -4,6 +4,7 @@ A minimalistic [Preact-like signals](https://preactjs.com/guide/v10/signals/) im
 
 Once minified and compressed, this module is actually [0.6kB](https://cdn.jsdelivr.net/npm/@webreflection/signals/dist/signals.js).
 
+##### core 
 ```js
 // basic core features
 import {
@@ -15,11 +16,35 @@ import {
 } from '@webreflection/signals';
 ```
 
+##### disposable
+
+Exposes Preact-like [createModel](https://github.com/preactjs/signals/blob/main/packages/core/README.md#createmodelfn) utility with a `disposable` export.
+
 ```js
 // extra core features
 import {
   // extra:
-  disposable, // equivalent of createModule(fn)
+  disposable, // equivalent of createModel(fn)
+  // ... same as core features ...
+  batch,
+  computed,
+  effect,
+  signal,
+  untracked,
+} from '@webreflection/signals/disposable';
+```
+
+
+##### branded
+
+This variant offers an `isSignal` utility that returns `true` or `false` if the passed argument is either  `signal` or a `computed` reference.
+
+```js
+// extra core features
+import {
+  // extra:
+  disposable, // equivalent of createModel(fn)
+  isSignal,   // true if `isSignal(ref)` is signal or computed
   // ... same as core features ...
   batch,
   computed,
