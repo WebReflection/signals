@@ -1,6 +1,6 @@
 # @webreflection/signals
 
-A minimalistic Preact-like signals implementation.
+A minimalistic [Preact-like signals](https://preactjs.com/guide/v10/signals/) implementation.
 
 Once minified and compressed, this module is actually [0.6kB](https://cdn.jsdelivr.net/npm/@webreflection/signals/dist/signals.js).
 
