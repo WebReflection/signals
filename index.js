@@ -1,6 +1,4 @@
-import { signal } from './signal.js';
-import { computed } from './computed.js';
-import { effect } from './effect.js';
+import { signal, computed, effect } from './src/index.js';
 
 // const s = signal(1);
 // const c = computed(() => s.value + 1);
@@ -14,7 +12,7 @@ import { effect } from './effect.js';
 
 
 // setTimeout(() => {
-//   s.value = 4;
+//   s.value = 9;
 //   console.log(c.value);
 // }, 1000);
 
@@ -39,7 +37,12 @@ effect(() => {
   });
 
   document.documentElement.onclick = () => {
-    if (s2.value > 6) s3.value++;
+    if (s2.value > 6) {
+      if (s3.value++ > 10) {
+        s2.value = 0;
+        s3.value = 0;
+      }
+    }
     else s2.value++;
   };
 });

@@ -1,11 +1,9 @@
-import { push, type } from './core.js';
+import { push } from './stack.js';
 
 export const signal = current => {
   let subscribers = new Set;
 
   return {
-    [type]: 'signal',
-
     get raw() {
       return current;
     },

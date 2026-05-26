@@ -1,4 +1,4 @@
-import { push, stack, type } from './core.js';
+import { push, stack } from './stack.js';
 
 export const computed = callback => {
   const subscriber = () => {
@@ -12,8 +12,6 @@ export const computed = callback => {
   let subscribers = new Set, invalid = true, value;
 
   return {
-    [type]: 'computed',
-
     get raw() {
       return value;
     },
