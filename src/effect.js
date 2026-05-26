@@ -78,7 +78,7 @@ export const effect = callback => {
 
 export const untracked = callback => {
   const before = isTracking();
-  if (before) forceTracking(false); 
+  forceTracking(false); 
   try { callback() }
   finally { forceTracking(before) }
 };
