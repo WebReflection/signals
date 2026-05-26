@@ -5,6 +5,7 @@ const effects = new WeakMap;
 const batches = [];
 
 let batching = false;
+let tracking = true;
 
 export const batch = callback => {
   const before = batching;
@@ -23,14 +24,16 @@ const cleanUp = subscriber => {
   const subscribers = effects.get(subscriber);
   const length = subscribers.length;
   if (length) {
-    for (let i = 0; i < length; i++) drop(subscribers[i]);
-    subscribers.splice(0);
+    for (const subscriber of subscribers.splice(0)) {
+      drop(subscriber);
+    }
   }
 };
 
-export const dispose = subscriber => {
-  if (!effects.has(subscriber)) return;
-  drop(subscriber);
+const dispose = subscriber => {
+  if (effects.has(subscriber)) {
+    drop(subscriber);
+  }
 };
 
 const drop = subscriber => {
@@ -70,5 +73,12 @@ export const effect = callback => {
 
   run();
 
-  return subscriber;
+  return () => dispose(subscriber);
+};
+
+export const untracked = callback => {
+  const before = tracking;
+  if (before) tracking = false;
+  try { callback() }
+  finally { tracking = before }
 };

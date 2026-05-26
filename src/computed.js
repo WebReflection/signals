@@ -12,10 +12,6 @@ export const computed = callback => {
   let subscribers = new Set, invalid = true, value;
 
   return {
-    get raw() {
-      return value;
-    },
-
     get value() {
       while (invalid) {
         invalid = false;
@@ -24,6 +20,10 @@ export const computed = callback => {
         try { value = callback() }
         finally { stack.pop() }
       }
+      return value;
+    },
+
+    peek() {
       return value;
     },
   };
