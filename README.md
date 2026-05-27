@@ -87,7 +87,7 @@ I mean ... that's coding, isn't it ... today I really needed something that woul
 
 #### Benchmark
 
-![benchmark](/WebReflection/usignal/raw/main/test/benchmark.png)
+![benchmark](https://raw.githubusercontent.com/WebReflection/usignal/main/test/benchmark.png)
 
 There is a *huge* difference between *NodeJS* and *Bun* but that's likely because *JSC* handles *Set* or *Map* in a better way, meaning all *WebKit* based browsers and mobile devices will have similar *Preact* performance, while *Chromium* based browsers will have half Preact size, but 1.5X slowdown.
 
