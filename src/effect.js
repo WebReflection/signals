@@ -1,4 +1,4 @@
-import { forceTracking, get, isTracking, run } from './stack.js';
+import { forceTracking, isTracking, run, stack } from './stack.js';
 
 const disposed = new WeakSet;
 const effects = new WeakMap;
@@ -40,7 +40,7 @@ export const effect = callback => {
   const subscriber = () => {
     if (invalid || disposed.has(subscriber)) return;
     invalid = true;
-    if (!get()) {
+    if (!stack) {
       if (batching) batches.push([subscriber, loop]);
       else loop();
     }
@@ -55,7 +55,7 @@ export const effect = callback => {
     }
   };
 
-  let invalid = true, stack = get();
+  let invalid = true;
 
   if (stack) effects.get(stack).push(subscriber);
 
