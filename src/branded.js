@@ -1,5 +1,6 @@
-export * from './effect.js';
 export * from './disposable.js';
+export * from './effect.js';
+export * from './untracked.js';
 
 import { computed as $computed } from './computed.js';
 import { signal as $signal } from './signal.js';

@@ -4,7 +4,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/WebReflection/signals/badge.svg?branch=main)](https://coveralls.io/github/WebReflection/signals?branch=main)
 
-A minimalistic [Preact-like signals](https://preactjs.com/guide/v10/signals/) (*minus options*) implementation.
+A minimalistic [Preact-like signals](https://github.com/preactjs/signals/blob/main/packages/core/README.md) implementation.
 
 Once minified and compressed, this module is actually [0.5KB](https://cdn.jsdelivr.net/npm/@webreflection/signals/dist/signals.js).
 
@@ -13,9 +13,9 @@ Once minified and compressed, this module is actually [0.5KB](https://cdn.jsdeli
 // basic core features
 import {
   batch,      // Preact-like API
-  computed,   // Preact-like API w/out options
-  effect,     // Preact-like API w/out options
-  signal,     // Preact-like API w/out options
+  computed,   // Preact-like API
+  effect,     // Preact-like API
+  signal,     // Preact-like API
   untracked,  // Preact-like API
 } from '@webreflection/signals';
 ```

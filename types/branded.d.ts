@@ -1,5 +1,6 @@
-export * from "./effect.js";
 export * from "./disposable.js";
+export * from "./effect.js";
+export * from "./untracked.js";
 export function computed(callback: any): {
     readonly value: any;
     peek: () => any;
