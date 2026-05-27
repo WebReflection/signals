@@ -30,12 +30,6 @@ const cleanUp = subscriber => {
   }
 };
 
-const dispose = subscriber => {
-  if (effects.has(subscriber)) {
-    drop(subscriber);
-  }
-};
-
 const drop = subscriber => {
   disposed.add(subscriber);
   cleanUp(subscriber);
@@ -73,7 +67,9 @@ export const effect = callback => {
 
   run();
 
-  return () => dispose(subscriber);
+  return () => {
+    if (effects.has(subscriber)) drop(subscriber);
+  };
 };
 
 export const untracked = callback => {
