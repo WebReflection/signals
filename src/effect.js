@@ -2,19 +2,18 @@ import { run, stack } from './stack.js';
 
 const disposed = new WeakSet;
 const effects = new WeakMap;
-const batches = [];
 
-let batching = false;
+let batches;
 
 /** @type {<T>(fn: () => T) => T} */
 export const batch = fn => {
-  const handle = !batching;
-  if (handle) batching = true;
+  let updates = batches;
+  if (!updates) batches = [];
   try { return fn() }
   finally {
-    if (handle) {
-      batching = false;
-      for (const [subscriber, run] of batches.splice(0)) {
+    if (!updates) {
+      [updates, batches] = [batches, updates];
+      for (const [subscriber, run] of updates) {
         if (!disposed.has(subscriber)) run();
       }
     }
@@ -43,7 +42,7 @@ export const effect = fn => {
     if (invalid || disposed.has(subscriber)) return;
     invalid = true;
     if (!stack) {
-      if (batching) batches.push([subscriber, loop]);
+      if (batches) batches.push([subscriber, loop]);
       else loop();
     }
   };
