@@ -6,11 +6,17 @@ export const forceTracking = value => {
 
 export const isTracking = () => tracking;
 
+let stack = null;
+
+export const get = () => stack;
+
 export const push = subscribers => {
-  if (tracking) {
-    const length = stack.length;
-    if (length) subscribers.add(stack[length - 1]);
-  }
+  if (tracking && stack) subscribers.add(stack);
 };
 
-export const stack = [];
+export const run = (subscriber, callback) => {
+  const before = stack;
+  stack = subscriber;
+  try { return callback() }
+  finally { stack = before }
+};

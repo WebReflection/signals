@@ -25,7 +25,7 @@
     }
   },
   "scripts": {
-    "build": "npm run build:dist && npm run build:disp && npm run build:branded && npm run size",
+    "build": "npm run build:dist && npm run build:disp && npm run build:branded && npm run test && npm run size",
     "build:branded": "esbuild src/branded.js --bundle --minify --platform=neutral --format=esm --outfile=dist/branded.js",
     "build:dist": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=dist/signals.js",
     "build:disp": "esbuild src/disposable.js --bundle --minify --platform=neutral --format=esm --outfile=dist/disposable.js",

@@ -1,4 +1,4 @@
-import { push, stack } from './stack.js';
+import { push, run } from './stack.js';
 
 export const computed = callback => {
   let subscribers = new Set, invalid = true, value;
@@ -16,9 +16,7 @@ export const computed = callback => {
       push(subscribers);
       while (invalid) {
         invalid = false;
-        stack.push(subscriber);
-        try { value = callback() }
-        finally { stack.pop() }
+        value = run(subscriber, callback);
       }
       return value;
     },
