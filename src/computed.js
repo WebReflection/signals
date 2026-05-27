@@ -11,18 +11,22 @@ export const computed = callback => {
     for (const subscriber of before) subscriber();
   };
 
+  const get = () => {
+    while (invalid) {
+      invalid = false;
+      value = run(subscriber, callback);
+    }
+    return value;
+  };
+
   return {
     get value() {
       push(subscribers);
-      while (invalid) {
-        invalid = false;
-        value = run(subscriber, callback);
-      }
-      return value;
+      return get();
     },
 
     peek() {
-      return value;
+      return get();
     },
   };
 };
