@@ -1,12 +1,15 @@
 export * from "./disposable.js";
 export * from "./effect.js";
 export * from "./untracked.js";
-export function computed(callback: any): {
-    readonly value: any;
-    peek: () => any;
+/** @type {<T>(fn: () => T) => { readonly value: T, peek: () => T }} */
+export const computed: <T>(fn: () => T) => {
+    readonly value: T;
+    peek: () => T;
 };
-export function isSignal(value: any): boolean;
-export function signal(current: any): {
-    value: any;
-    peek: () => any;
+/** @type {(value: unknown) => boolean} */
+export const isSignal: (value: unknown) => boolean;
+/** @type {<T>(init: T) => { value: T, peek: () => T }} */
+export const signal: <T>(init: T) => {
+    value: T;
+    peek: () => T;
 };

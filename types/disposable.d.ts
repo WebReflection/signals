@@ -1,2 +1,2 @@
 export * from "./index.js";
-export function disposable(callback: any): (...args: any[]) => undefined;
+export function disposable(fn: any): (...args: any[]) => undefined;

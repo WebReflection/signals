@@ -79,8 +79,8 @@ You know, nowadays it's hard to find libraries that are still 100% under control
   * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 33 LOC.
   * the shared [stack](https://github.com/WebReflection/signals/blob/main/src/stack.js) is 20 LOC.
   * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 75 LOC.
-  * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 12 LOC, based on the core library mentioned in the previous points.
-  * [branded](https://github.com/WebReflection/signals/blob/main/src/branded.js) is 21 LOC extra needed only for libraries building on top.
+  * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 10 LOC, based on the core library mentioned in the previous points.
+  * [branded](https://github.com/WebReflection/signals/blob/main/src/branded.js) is 25 LOC extra needed only for libraries building on top.
 
 I mean ... that's coding, isn't it ... today I really needed something that would remind me why I love what I do ❤️
 
