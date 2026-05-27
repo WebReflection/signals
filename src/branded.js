@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 export * from './effect.js';
 export * from './disposable.js';
 

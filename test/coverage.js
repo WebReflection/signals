@@ -161,9 +161,10 @@ assert(logs.join(','), '0,1,2', 'effect()');
 const invalid = computed(() => s1.value + s2.value);
 
 logs.splice(0);
+const cleanups = [];
 dispose = effect(() => {
   logs.push(invalid.value);
-  return () => { console.log('cleanup'); };
+  return () => { cleanups.push('cleanup'); };
 });
 
 batch(() => {
@@ -172,4 +173,10 @@ batch(() => {
 });
 
 assert(logs.join(','), '16,18', 'computed invalid');
+assert(cleanups.length, 1, 'cleanups.length === 1');
+assert(cleanups[0], 'cleanup', 'cleanups[0] === cleanup');
 dispose();
+
+assert(cleanups.length, 2, 'cleanups.length === 2');
+assert(cleanups[0], 'cleanup', 'cleanups[0] === cleanup');
+assert(cleanups[1], 'cleanup', 'cleanups[1] === cleanup');

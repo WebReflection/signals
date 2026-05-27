@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { push, run } from './stack.js';
 
 /** @type {<T>(fn: () => T) => { readonly value: T, peek: () => T }} */

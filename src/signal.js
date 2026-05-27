@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { isTracking, push } from './stack.js';
 
 /** @type {<T>(init: T) => { value: T, peek: () => T }} */

@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-import { forceTracking, isTracking, run, stack } from './stack.js';
+import { run, stack } from './stack.js';
 
 const disposed = new WeakSet;
 const effects = new WeakMap;
@@ -74,12 +72,4 @@ export const effect = fn => {
       drop(subscriber);
     }
   };
-};
-
-/** @type {<T>(fn: () => T) => T} */
-export const untracked = fn => {
-  const before = isTracking();
-  forceTracking(false); 
-  try { return fn() }
-  finally { forceTracking(before) }
 };
