@@ -72,6 +72,7 @@ import {
 
 You know, nowadays it's hard to find libraries that are still 100% under control, minimalistic, not bloated, yet correct, and this one would like to be one of those 😇
 
+
 #### The Beauty
 
   * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 26 LOC.
@@ -82,3 +83,12 @@ You know, nowadays it's hard to find libraries that are still 100% under control
   * [branded](https://github.com/WebReflection/signals/blob/main/src/branded.js) is 21 LOC extra needed only for libraries building on top.
 
 I mean ... that's coding, isn't it ... today I really needed something that would remind me why I love what I do ❤️
+
+
+#### Benchmark
+
+![benchmark](/WebReflection/usignal/raw/main/test/benchmark.png)
+
+There is a *huge* difference between *NodeJS* and *Bun* but that's likely because *JSC* handles *Set* or *Map* in a better way, meaning all *WebKit* based browsers and mobile devices will have similar *Preact* performance, while *Chromium* based browsers will have half Preact size, but 1.5X slowdown.
+
+However, in common scenarios with no more than 10 to 100 signals per *effect*, the performance are consistently better or really close to Preact.
