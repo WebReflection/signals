@@ -13,9 +13,9 @@ export const computed = callback => {
 
   return {
     get value() {
+      push(subscribers);
       while (invalid) {
         invalid = false;
-        push(subscribers);
         stack.push(subscriber);
         try { value = callback() }
         finally { stack.pop() }

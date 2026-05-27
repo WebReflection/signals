@@ -19,13 +19,18 @@
     "./dist": "./dist/signals.js",
     "./package.json": "./package.json"
   },
+  "overrides": {
+    "c8": {
+      "yargs": "^18.0.0"
+    }
+  },
   "scripts": {
     "build": "npm run build:dist && npm run build:disp && npm run build:branded && npm run size",
     "build:branded": "esbuild src/branded.js --bundle --minify --platform=neutral --format=esm --outfile=dist/branded.js",
     "build:dist": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=dist/signals.js",
     "build:disp": "esbuild src/disposable.js --bundle --minify --platform=neutral --format=esm --outfile=dist/disposable.js",
     "size": "echo 'signals'; cat dist/signals.js | brotli | wc -c; echo '\ndisposable'; cat dist/disposable.js | brotli | wc -c; echo '\nbranded'; cat dist/branded.js | brotli | wc -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "c8 node --expose-gc test/coverage.js"
   },
   "keywords": [
     "signals",
@@ -42,6 +47,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "c8": "^11.0.0",
     "esbuild": "^0.28.0"
   }
 }

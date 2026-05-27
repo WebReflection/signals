@@ -51,7 +51,7 @@ import {
   effect,
   signal,
   untracked,
-} from '@webreflection/signals/disposable';
+} from '@webreflection/signals/branded';
 ```
 
 ### In Depth
