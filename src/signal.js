@@ -1,4 +1,4 @@
-import { isTracking, push } from './stack.js';
+import { push, tracking } from './stack.js';
 
 /** @type {<T>(init: T) => { value: T, peek: () => T }} */
 export const signal = init => {
@@ -12,7 +12,7 @@ export const signal = init => {
 
     set value(value) {
       init = value;
-      if (isTracking()) {
+      if (tracking) {
         const before = subscribers;
         subscribers = new Set;
         for (const subscriber of before) subscriber();

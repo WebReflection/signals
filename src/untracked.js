@@ -1,8 +1,8 @@
-import { forceTracking, isTracking } from './stack.js';
+import { forceTracking, tracking } from './stack.js';
 
 /** @type {<T>(fn: () => T) => T} */
 export const untracked = fn => {
-  const before = isTracking();
+  const before = tracking;
   forceTracking(false); 
   try { return fn() }
   finally { forceTracking(before) }
