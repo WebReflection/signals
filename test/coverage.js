@@ -161,8 +161,9 @@ assert(logs.join(','), '0,1,2', 'effect()');
 const invalid = computed(() => s1.value + s2.value);
 
 logs.splice(0);
-effect(() => {
+dispose = effect(() => {
   logs.push(invalid.value);
+  return () => { console.log('cleanup'); };
 });
 
 batch(() => {
@@ -171,3 +172,4 @@ batch(() => {
 });
 
 assert(logs.join(','), '16,18', 'computed invalid');
+dispose();

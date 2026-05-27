@@ -1,16 +1,19 @@
+// @ts-nocheck
+
 import { isTracking, push } from './stack.js';
 
-export const signal = current => {
+/** @type {<T>(init: T) => { value: T, peek: () => T }} */
+export const signal = init => {
   let subscribers = new Set;
 
   return {
     get value() {
       push(subscribers);
-      return current;
+      return init;
     },
 
     set value(value) {
-      current = value;
+      init = value;
       if (isTracking()) {
         const before = subscribers;
         subscribers = new Set;
@@ -19,7 +22,7 @@ export const signal = current => {
     },
 
     peek() {
-      return current;
+      return init;
     },
   };
 };

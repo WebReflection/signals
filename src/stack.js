@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 let tracking = true;
 
 export const forceTracking = value => {

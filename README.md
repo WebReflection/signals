@@ -4,7 +4,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/WebReflection/signals/badge.svg?branch=main)](https://coveralls.io/github/WebReflection/signals?branch=main)
 
-A minimalistic [Preact-like signals](https://preactjs.com/guide/v10/signals/) implementation.
+A minimalistic [Preact-like signals](https://preactjs.com/guide/v10/signals/) (*minus options*) implementation.
 
 Once minified and compressed, this module is actually [0.5KB](https://cdn.jsdelivr.net/npm/@webreflection/signals/dist/signals.js).
 
@@ -13,9 +13,9 @@ Once minified and compressed, this module is actually [0.5KB](https://cdn.jsdeli
 // basic core features
 import {
   batch,      // Preact-like API
-  computed,   // Preact-like API
-  effect,     // Preact-like API
-  signal,     // Preact-like API
+  computed,   // Preact-like API w/out options
+  effect,     // Preact-like API w/out options
+  signal,     // Preact-like API w/out options
   untracked,  // Preact-like API
 } from '@webreflection/signals';
 ```
@@ -74,10 +74,10 @@ You know, nowadays it's hard to find libraries that are still 100% under control
 
 #### The Beauty
 
-  * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 25 LOC.
-  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 32 LOC.
+  * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 26 LOC.
+  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 33 LOC.
   * the shared [stack](https://github.com/WebReflection/signals/blob/main/src/stack.js) is 20 LOC.
-  * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 76 LOC.
+  * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 83 LOC.
   * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 12 LOC, based on the core library mentioned in the previous points.
   * [branded](https://github.com/WebReflection/signals/blob/main/src/branded.js) is 21 LOC extra needed only for libraries building on top.
 

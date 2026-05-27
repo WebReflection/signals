@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export * from './index.js';
 import { effect } from './effect.js';
 

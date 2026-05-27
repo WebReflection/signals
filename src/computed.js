@@ -1,6 +1,9 @@
+// @ts-nocheck
+
 import { push, run } from './stack.js';
 
-export const computed = callback => {
+/** @type {<T>(fn: () => T) => { readonly value: T, peek: () => T }} */
+export const computed = fn => {
   let subscribers = new Set, invalid = true, value;
 
   const subscriber = () => {
@@ -14,7 +17,7 @@ export const computed = callback => {
   const get = () => {
     while (invalid) {
       invalid = false;
-      value = run(subscriber, callback);
+      value = run(subscriber, fn);
     }
     return value;
   };

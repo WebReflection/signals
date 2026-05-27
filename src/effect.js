@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { forceTracking, isTracking, run, stack } from './stack.js';
 
 const disposed = new WeakSet;
@@ -6,10 +8,11 @@ const batches = [];
 
 let batching = false;
 
-export const batch = callback => {
+/** @type {<T>(fn: () => T) => T} */
+export const batch = fn => {
   const handle = !batching;
   if (handle) batching = true;
-  try { callback() }
+  try { return fn() }
   finally {
     if (handle) {
       batching = false;
@@ -36,7 +39,8 @@ const drop = subscriber => {
   effects.delete(subscriber);
 };
 
-export const effect = callback => {
+/** @type {(fn: (() => void | (() => void))) => (() => void)} */
+export const effect = fn => {
   const subscriber = () => {
     if (invalid || disposed.has(subscriber)) return;
     invalid = true;
@@ -50,12 +54,13 @@ export const effect = callback => {
     while (invalid) {
       invalid = false;
       cleanUp(subscriber);
-      run(subscriber, callback);
+      clean?.();
+      clean = run(subscriber, fn);
       if (disposed.has(subscriber)) return;
     }
   };
 
-  let invalid = true;
+  let invalid = true, clean;
 
   if (stack) effects.get(stack).push(subscriber);
 
@@ -64,13 +69,17 @@ export const effect = callback => {
   loop();
 
   return () => {
-    if (effects.has(subscriber)) drop(subscriber);
+    if (effects.has(subscriber)) {
+      clean?.();
+      drop(subscriber);
+    }
   };
 };
 
-export const untracked = callback => {
+/** @type {<T>(fn: () => T) => T} */
+export const untracked = fn => {
   const before = isTracking();
   forceTracking(false); 
-  try { callback() }
+  try { return fn() }
   finally { forceTracking(before) }
 };
