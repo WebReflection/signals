@@ -6,7 +6,7 @@ export const forceTracking = value => {
 
 export const isTracking = () => tracking;
 
-export let stack = null;
+export let stack;
 
 export const push = subscribers => {
   if (tracking && stack) subscribers.add(stack);
