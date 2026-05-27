@@ -1,5 +1,8 @@
 # @webreflection/signals
 
+<sup>**Social Media Photo by [Carlos Alberto Gómez Iñiguez](https://unsplash.com/@iniguez) on [Unsplash](https://unsplash.com/)**</sup>
+
+
 [![Coverage Status](https://coveralls.io/repos/github/WebReflection/signals/badge.svg?branch=main)](https://coveralls.io/github/WebReflection/signals?branch=main)
 
 A minimalistic [Preact-like signals](https://preactjs.com/guide/v10/signals/) implementation.
