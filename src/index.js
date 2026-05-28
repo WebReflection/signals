@@ -1,5 +1,10 @@
 let batches, notify, stack, subscribers, value;
 
+const { dispose } = Symbol;
+
+/** @type {never} */
+const compute = Symbol();
+
 /** @template T */
 export class Signal {
   static {
@@ -31,10 +36,11 @@ export class Signal {
   peek() {
     return this.#value;
   }
-}
 
-/** @type {never} */
-const compute = Symbol();
+  [dispose]() {
+    this.#value = this.#subscribers.clear();
+  }
+}
 
 /**
  * @template T
@@ -48,6 +54,10 @@ export class Computed extends Signal {
     if (this.#invalid) return;
     this.#invalid = true;
     notify(this);
+  }
+
+  [dispose]() {
+    this.#result = super[dispose]();
   }
 
   /** @readonly @returns {T} */
@@ -108,7 +118,7 @@ export const batch = fn => {
 
 const cleanup = fx => {
   fx.cleanup?.();
-  if (fx.sub.length) fx.sub.splice(0).forEach(dispose);
+  if (fx.sub.length) fx.sub.splice(0).forEach(drop);
 };
 
 /**
@@ -118,9 +128,9 @@ const cleanup = fx => {
  */
 export const computed = fn => new Computed(fn);
 
-const dispose = fx => {
+const drop = fx => {
   fx.disposed = true;
-  cleanup(fx);
+  fx.cleanup = fx.fn = cleanup(fx);
 };
 
 /**
@@ -131,9 +141,7 @@ export const effect = fn => {
   const fx = new Effect(fn);
   if (stack) stack.sub.push(fx);
   fx.peek();
-  return () => {
-    if (!fx.disposed) dispose(fx);
-  };
+  return () => drop(fx);
 };
 
 const run = (state, callback) => {

@@ -215,7 +215,19 @@ class Signal extends WRSignal {
 export const signal = value => new Signal(value);
 ```
 
-  * conditional dependencies are not pruned after every run. Instead, subscribers are kept by the signal or computed reference and are pruned lazily when that source notifies again, skipping disposed effects along the way. If a source is no longer referenced, normal garbage collection takes care of it; if it is still referenced, the next notification keeps the final value valid and fast enough to retrieve without maintaining a more complex dependency graph.
+  * conditional dependencies are not pruned after every run. Instead, subscribers are kept by the signal or computed reference and are pruned lazily when that source notifies again, skipping disposed effects along the way. This might look "leaky" at first glance, but every `Signal` and `Computed` implements native `Symbol.dispose`, so the latest JavaScript `using` syntax can deterministically clear retained subscribers when a scope is done:
+
+```js
+{
+  using count = signal(0);
+  using doubled = computed(() => count.value * 2);
+
+  effect(() => console.log(doubled.value));
+}
+// count and doubled are disposed here
+```
+
+If a source is no longer referenced, normal garbage collection takes care of it; if it is still referenced, the next notification keeps the final value valid and fast enough to retrieve without maintaining a more complex dependency graph.
 
   * mixed direct signal reads and derived computed reads can observe an intermediate stale computed value in the same effect, because there is no graph ordering involved. For example, reading both `count.value` and `doubled.value` where `doubled` is computed from `count` can briefly see the updated `count` with the previous `doubled` before the computed invalidation catches up. This is the little extra cost paid by a not-so-common scenario to keep the library as small as it is.
 

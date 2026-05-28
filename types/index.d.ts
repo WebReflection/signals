@@ -1,4 +1,5 @@
 export class Signal<T> {
+    [x: number]: () => void;
     constructor(init: T);
     set value(value: T);
     get value(): T;
@@ -6,7 +7,6 @@ export class Signal<T> {
     #private;
 }
 export class Computed<T> extends Signal<() => T> {
-    [x: number]: () => void;
     constructor(init: () => T);
     readonly get value(): T;
     peek(): T;

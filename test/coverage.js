@@ -238,3 +238,13 @@ assert(logs.length, 0, 'logs.length === 0');
 s1.value++;
 
 assert(logs.length, 1, 'logs.length === 1');
+
+{
+  using s1Gone = s1;
+  using c1Gone = c1;
+  assert(typeof s1.value, 'number', 's1.value is number');
+  assert(typeof c1.value, 'number', 'c1.value is number');
+}
+
+assert(s1.value, void 0, 's1 disposed');
+assert(c1.value, void 0, 'c1 disposed');
