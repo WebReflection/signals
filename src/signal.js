@@ -15,7 +15,7 @@ export const signal = init => {
       if (tracking) {
         const before = subscribers;
         subscribers = new Set;
-        for (const subscriber of before) subscriber();
+        for (const sub of before) sub();
       }
     },
 
