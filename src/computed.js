@@ -1,31 +1,37 @@
 import { push, run } from './stack.js';
 
-/** @type {<T>(fn: () => T) => { readonly value: T, peek: () => T }} */
-export const computed = fn => {
-  let subscribers = new Set, invalid = true, value;
+class Computed {
+  #subscribers = new Set;
+  #invalid = true;
 
-  const peek = () => {
-    while (invalid) {
-      invalid = false;
-      value = run(subscriber, fn);
+  #fn;
+  #value;
+
+  constructor(fn) {
+    this.#fn = fn;
+  }
+
+  get value() {
+    push(this.#subscribers);
+    return this.peek();
+  }
+
+  $() {
+    if (this.#invalid) return;
+    this.#invalid = true;
+    const before = this.#subscribers;
+    this.#subscribers = new Set;
+    for (const state of before) state.$();
+  }
+
+  peek() {
+    while (this.#invalid) {
+      this.#invalid = false;
+      this.#value = run(this, this.#fn);
     }
-    return value;
-  };
+    return this.#value;
+  }
+}
 
-  const subscriber = () => {
-    if (invalid) return;
-    invalid = true;
-    const before = subscribers;
-    subscribers = new Set;
-    for (const sub of before) sub();
-  };
-
-  return {
-    get value() {
-      push(subscribers);
-      return peek();
-    },
-
-    peek,
-  };
-};
+/** @type {<T>(fn: () => T) => { readonly value: T, peek: () => T }} */
+export const computed = fn => new Computed(fn);

@@ -1,7 +1,5 @@
 import { run, stack } from './stack.js';
 
-const effects = new WeakMap;
-
 let batches;
 
 /** @type {<T>(fn: () => T) => T} */
@@ -12,8 +10,8 @@ export const batch = fn => {
   finally {
     if (!before) {
       [before, batches] = [batches, before];
-      for (const [sub, loop] of before) {
-        if (effects.has(sub)) loop();
+      for (const [state, loop] of before) {
+        if (!state.d) loop();
       }
     }
   }
@@ -24,11 +22,9 @@ const cleanUp = state => {
   if (state.s.length) state.s.splice(0).forEach(dispose);
 };
 
-const dispose = subscriber => {
-  const state = effects.get(subscriber);
+const dispose = state => {
   state.d = true;
   cleanUp(state);
-  effects.delete(subscriber);
 };
 
 /** @type {(fn: (() => void | (() => void))) => (() => void)} */
@@ -37,7 +33,7 @@ export const effect = fn => {
     if (invalid || state.d) return;
     invalid = true;
     if (!stack) {
-      if (batches) batches.push([subscriber, loop]);
+      if (batches) batches.push([state, loop]);
       else loop();
     }
   };
@@ -46,20 +42,18 @@ export const effect = fn => {
     while (invalid) {
       invalid = false;
       cleanUp(state);
-      state.c = run(subscriber, fn);
+      state.c = run(state, fn);
       if (state.d) return;
     }
   };
 
-  let invalid = true, c, state = { s: [], d: !invalid, c };
+  let invalid = true, c, state = { $: subscriber, s: [], d: !invalid, c };
 
-  if (stack) effects.get(stack).s.push(subscriber);
-
-  effects.set(subscriber, state);
+  if (stack) stack.s.push(state);
 
   loop();
 
   return () => {
-    if (!state.d) dispose(subscriber);
+    if (!state.d) dispose(state);
   };
 };

@@ -10,9 +10,9 @@ export const push = subscribers => {
   if (tracking && stack) subscribers.add(stack);
 };
 
-export const run = (subscriber, callback) => {
+export const run = (state, callback) => {
   const before = stack;
-  stack = subscriber;
+  stack = state;
   try { return callback() }
   finally { stack = before }
 };
