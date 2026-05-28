@@ -7,9 +7,7 @@ class Computed {
   #fn;
   #value;
 
-  constructor(fn) {
-    this.#fn = fn;
-  }
+  constructor(fn) { this.#fn = fn }
 
   get value() {
     push(this.#subscribers);
