@@ -48,7 +48,9 @@
     "build:types": "tsc --allowJs --declaration --emitDeclarationOnly --stripInternal --removeComments --outDir types --target es2022 --lib es2024 --module nodenext --moduleResolution nodenext src/*.js",
     "coverage": "mkdir -p ./coverage; c8 report --reporter=text-lcov > ./coverage/lcov.info",
     "size": "echo 'signals'; cat dist/signals.js | brotli | wc -c; echo '\ndisposable'; cat dist/disposable.js | brotli | wc -c",
-    "test": "c8 node --expose-gc test/coverage.js"
+    "test": "npm run test:js && npm run test:py",
+    "test:js": "c8 node --expose-gc test/coverage.js",
+    "test:py": "python py/test_signals.py"
   },
   "keywords": [
     "signals",
