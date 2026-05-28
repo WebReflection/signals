@@ -1,6 +1,6 @@
 {
   "name": "@webreflection/signals",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "A minimalistic Preact-like signals implementation",
   "main": "src/index.js",
   "module": "src/index.js",
