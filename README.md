@@ -12,6 +12,8 @@ Once minified and compressed, this module is actually [0.5KB](https://cdn.jsdeli
 ```js
 // basic core features
 import {
+  Signal,     // class for brand check
+  Computed,   // extends Signal: brand check
   batch,      // Preact-like API
   computed,   // Preact-like API
   effect,     // Preact-like API
@@ -29,38 +31,15 @@ Exposes a Preact-like [createModel](https://github.com/preactjs/signals/blob/mai
 import {
   // extra:
   disposable, // equivalent of createModel(fn)
-  // ... same as core features ...
-  batch,
-  computed,
-  effect,
-  signal,
-  untracked,
+  // all other exports from core
+  ...core
 } from '@webreflection/signals/disposable';
 ```
 
 
-### branded
-
-This variant offers an `isSignal` utility that returns `true` or `false` if the passed argument is either a `signal` or a `computed` reference.
-
-```js
-// extra core features
-import {
-  // extra:
-  disposable, // equivalent of createModel(fn)
-  isSignal,   // true if `isSignal(ref)` is signal or computed
-  // ... same as core features ...
-  batch,
-  computed,
-  effect,
-  signal,
-  untracked,
-} from '@webreflection/signals/branded';
-```
-
 ### In Depth
 
-  * simply stack-based, maybe not the best approach, but one that can guarantee reasonable performance with minimal code size.
+  * simply (swapped) stack-based, maybe not the best approach, but one that can guarantee reasonable performance with minimal code size.
   * only `signal` and `computed` subscribe while reading values, unless `sig_or_comp.peek()` is used.
   * any `effect` updates synchronously but then runs only in isolation. Every effect is disposed of if the outer effect is running, meaning stacked effects work out of the box and always™ do the right thing.
   * `disposable` uses the very same `effect` logic to dispose itself when not needed anymore.
@@ -73,25 +52,9 @@ import {
 You know, nowadays it's hard to find libraries that are still 100% under control, minimalistic, not bloated, yet correct, and this one would like to be one of those 😇
 
 
-#### The Beauty
-
-  * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 26 LOC.
-  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 31 LOC.
-  * the shared [stack](https://github.com/WebReflection/signals/blob/main/src/stack.js) is 18 LOC.
-  * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 65 LOC.
-  * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 10 LOC, based on the core library mentioned in the previous points.
-  * [branded](https://github.com/WebReflection/signals/blob/main/src/branded.js) is 25 LOC extra needed only for libraries building on top.
-
-I mean ... that's coding, isn't it ... today I really needed something that would remind me why I love what I do ❤️
-
-
 #### Benchmark
 
 ![benchmark](https://raw.githubusercontent.com/WebReflection/usignal/main/test/benchmark.png)
-
-There is a *huge* difference between *NodeJS* and *Bun* but that's likely because *JSC* handles *Set* or *Map* in a better way, meaning all *WebKit* based browsers and mobile devices will have similar *Preact* performance, while *Chromium* based browsers will have half Preact size, but 1.5X slowdown.
-
-However, in common scenarios with no more than 10 to 100 signals per *effect*, the performance are consistently better or really close to Preact.
 
 ## Architecture
 
@@ -179,8 +142,8 @@ No *effect*? No reactivity! This is the *signals* contract, but there is a *catc
 
 Great questions. Here are the details about why that's never a concern:
 
-  * *effect* never subscribes to changes, it just registers itself as an *observer*
-  * *effect* never runs if it knows outer *effects* are queued to resolve the latest change
+  * *effect* never add subscribers to itself, like signals or computeds do, it just registers itself as an *observer* (*subscriber*)
+  * *effect* never runs if it knows outer *effects* are queued to resolve the latest change or changes are happening while it's running
   * the previous point means if `signal.value` is registered both at the *inner* effect level and at the *outer* one, the *outer* one will dictate the execution because ...
   * only the top-most subscribed effects will eventually execute, and ...
   * any *effect* previously registered for its outer *effect* will be **disposed** and never react to anything again!
@@ -190,7 +153,7 @@ I am not sure you are still following, but because *effect* is a bottom-up probl
 
 ### Batch
 
-If you followed everything else I've explained around this architecture, `batch(callback)` simply represents a running *callback* with no tracking whatsoever, except the implementation keeps tracing what should run fresh and what doesn't exist anymore. The latest *effect* that got it right will trigger and eventually access, or *re-subscribe* to, anything in it, but just once, after the *batch* callback has finished.
+If you followed everything else I've explained around this architecture, `batch(callback)` simply represents a running *callback* with no instant reactivity, it simply accumulates changes and trigger after all changes happend for whatever effect was involved.
 
 ### Untracked
 

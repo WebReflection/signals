@@ -1,5 +1,5 @@
 export * from './index.js';
-import { effect } from './effect.js';
+import { effect } from './index.js';
 
 export const disposable = fn => function disposable(...args) {
   let ref, value = effect(() => {
