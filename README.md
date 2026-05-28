@@ -76,7 +76,7 @@ You know, nowadays it's hard to find libraries that are still 100% under control
 #### The Beauty
 
   * [signal](https://github.com/WebReflection/signals/blob/main/src/signal.js) is 26 LOC.
-  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 33 LOC.
+  * [computed](https://github.com/WebReflection/signals/blob/main/src/computed.js) is 31 LOC.
   * the shared [stack](https://github.com/WebReflection/signals/blob/main/src/stack.js) is 18 LOC.
   * [effect](https://github.com/WebReflection/signals/blob/main/src/effect.js) is where business happens, 74 LOC.
   * [disposable](https://github.com/WebReflection/signals/blob/main/src/disposable.js) is 10 LOC, based on the core library mentioned in the previous points.
