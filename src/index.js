@@ -1,12 +1,14 @@
-let batches, getValue, getSubscribers, setSubscribers, stack, tracking = true;
+let batches, notify, stack, subscribers, value, tracking = true;
 
 /** @template T */
 export class Signal {
   static {
-    getValue = self => self.#value;
-    getSubscribers = self => self.#subscribers;
-    setSubscribers = (self, subscribers) => {
-      self.#subscribers = subscribers;
+    value = self => self.#value;
+    subscribers = self => self.#subscribers;
+    notify = self => {
+      const subscribers = self.#subscribers;
+      self.#subscribers = new Set;
+      for (const subscriber of subscribers) subscriber[compute]();
     };
   }
 
@@ -23,11 +25,7 @@ export class Signal {
 
   set value(value) {
     this.#value = value;
-    if (tracking) {
-      const subscribers = this.#subscribers;
-      this.#subscribers = new Set;
-      notify(subscribers);
-    }
+    if (tracking) notify(this);
   }
 
   peek() {
@@ -49,14 +47,12 @@ export class Computed extends Signal {
   [compute]() {
     if (this.#invalid) return;
     this.#invalid = true;
-    const subscribers = getSubscribers(this);
-    setSubscribers(this, new Set);
-    notify(subscribers);
+    if (tracking) notify(this);
   }
 
   /** @readonly @returns {T} */
   get value() {
-    push(getSubscribers(this));
+    push(subscribers(this));
     return this.peek();
   }
 
@@ -64,7 +60,7 @@ export class Computed extends Signal {
   peek() {
     while (this.#invalid) {
       this.#invalid = false;
-      this.#result = run(this, getValue(this));
+      this.#result = run(this, value(this));
     }
     return this.#result;
   }
@@ -138,10 +134,6 @@ export const effect = fn => {
   return () => {
     if (!fx.disposed) dispose(fx);
   };
-};
-
-const notify = subscribers => {
-  for (const subscriber of subscribers) subscriber[compute]();
 };
 
 const push = subscribers => {
