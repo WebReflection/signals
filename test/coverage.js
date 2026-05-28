@@ -180,3 +180,19 @@ dispose();
 assert(cleanups.length, 2, 'cleanups.length === 2');
 assert(cleanups[0], 'cleanup', 'cleanups[0] === cleanup');
 assert(cleanups[1], 'cleanup', 'cleanups[1] === cleanup');
+
+
+logs.splice(0);
+
+dispose = effect(() => {
+  const value = s1.value;
+  effect(() => () => {
+    logs.push(value);
+  });
+});
+
+assert(logs.length, 0, 'logs.length === 0');
+
+s1.value++;
+
+assert(logs.length, 1, 'logs.length === 1');
