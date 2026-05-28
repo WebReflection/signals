@@ -19,7 +19,7 @@ export class Signal {
   constructor(init) { this.#value = init }
 
   get value() {
-    push(this.#subscribers);
+    if (stack) this.#subscribers.add(stack);
     return this.#value;
   }
 
@@ -52,7 +52,7 @@ export class Computed extends Signal {
 
   /** @readonly @returns {T} */
   get value() {
-    push(subscribers(this));
+    if (stack) subscribers(this).add(stack);
     return this.peek();
   }
 
@@ -134,10 +134,6 @@ export const effect = fn => {
   return () => {
     if (!fx.disposed) dispose(fx);
   };
-};
-
-const push = subscribers => {
-  if (stack) subscribers.add(stack);
 };
 
 const run = (state, callback) => {

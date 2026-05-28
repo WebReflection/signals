@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "module": "src/index.js",
   "files": [
+    "py/signals.py",
     "dist/",
     "src/",
     "types/",

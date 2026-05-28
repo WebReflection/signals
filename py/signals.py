@@ -31,7 +31,8 @@ class Signal:
 
     @property
     def value(self):
-        _push(self._subscribers)
+        if _stack is not None:
+            self._subscribers.add(_stack)
         return self._value
 
     @value.setter
@@ -57,7 +58,8 @@ class Computed(Signal):
 
     @property
     def value(self):
-        _push(self._subscribers)
+        if _stack is not None:
+            self._subscribers.add(_stack)
         return self.peek()
 
     def peek(self):
@@ -119,11 +121,6 @@ def _cleanup(fx):
 def _dispose(fx):
     fx.disposed = True
     _cleanup(fx)
-
-
-def _push(subscribers):
-    if _stack is not None:
-        subscribers.add(_stack)
 
 
 def _run(state, callback):
