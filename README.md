@@ -93,6 +93,8 @@ The main difference between *computed* and *signal* is that *computed* is a **re
 
 Everything else is the same: you cannot `computed.value = anything` but you can always retrieve `computed.value` to subscribe to that computed.
 
+When a dependency changes, a *computed* is not immediately executed again: it is simply marked as *invalid*. That invalid state is also a guard, because once a *computed* is already known to be stale there is no reason to notify its subscribers again for every other signal change happening in the same flow, or while that *computed* is already resolving itself. The next `.value` or `.peek()` access refreshes it once, producing the latest result from the current state.
+
   </div>
 </details>
 
@@ -162,6 +164,8 @@ Great questions. Here are the details about why that's never a concern:
   * any *effect* previously registered for its outer *effect* will be **disposed** and never react to anything again!
 
 I am not sure you are still following, but because *effect* is a bottom-up problem, top-down is clearly the solution, and that's granted by the registration **stack**, where the outer *effect* runs before the *inner effect*. That solves everything!
+
+The same *invalid* guard used by *computed* values applies to *effects* too: when multiple signals ask the same *effect* to refresh, only the first invalidation matters until that *effect* has actually run again. This avoids repeated work, avoids repeated notifications, and prevents an *effect* from recursively refreshing itself while its own callback is still on the stack.
 
   </div>
 </details>
