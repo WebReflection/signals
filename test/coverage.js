@@ -24,6 +24,7 @@ const c2 = computed(() => (s3.value + c1.value));
 
 assert((s1 instanceof Signal), true, 's1 is a signal');
 assert((c1 instanceof Signal), true, 'c1 is a signal');
+assert((c1 instanceof Computed), true, 'c1 is a computed');
 
 assert(s1.value, 1, 's1.value === 1');
 assert(c1.value, 3, 'c1.value === 3');
@@ -53,17 +54,58 @@ assert(logs[1], 6, 'logs[1] === 6');
 untracked(() => {
   s1.value++;
 });
-assert(logs.length, 2, 'logs.length === 2');
+assert(logs.length, 3, 'logs.length === 3');
+assert(logs[2], 7, 'logs[2] === 7');
 
 s1.value++;
-assert(logs.length, 3, 'logs.length === 3');
-assert(logs[2], 8, 'logs[1] === 8');
+assert(logs.length, 4, 'logs.length === 4');
+assert(logs[3], 8, 'logs[3] === 8');
 
 
 dispose();
 s1.value++;
-assert(logs.length, 3, 'logs.length === 3');
+assert(logs.length, 4, 'logs.length === 4');
 assert(c1.value, 9, 'c1.value === 9');
+
+const tracked = signal(0);
+const ignored = signal(0);
+
+logs.splice(0);
+dispose = effect(() => {
+  logs.push(tracked.value, untracked(() => ignored.value));
+});
+
+assert(logs.join(','), '0,0', 'untracked() read');
+
+ignored.value++;
+assert(logs.join(','), '0,0', 'untracked() read');
+
+tracked.value++;
+assert(logs.join(','), '0,0,1,1', 'untracked() read');
+
+dispose();
+
+const count = signal(0);
+const delta = signal(1);
+
+logs.splice(0);
+dispose = effect(() => {
+  logs.push('run');
+  count.value = untracked(() => count.value + delta.value);
+});
+
+assert(logs.join(','), 'run', 'untracked() update');
+assert(count.value, 1, 'count.value === 1');
+
+delta.value++;
+assert(logs.join(','), 'run', 'untracked() update');
+assert(count.value, 1, 'count.value === 1');
+
+count.value++;
+assert(logs.join(','), 'run', 'untracked() update');
+assert(count.value, 2, 'count.value === 2');
+
+dispose();
 
 logs.splice(0);
 dispose = disposable((initialCount = 0) => {

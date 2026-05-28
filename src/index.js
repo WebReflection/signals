@@ -1,4 +1,4 @@
-let batches, notify, stack, subscribers, value, tracking = true;
+let batches, notify, stack, subscribers, value;
 
 /** @template T */
 export class Signal {
@@ -25,7 +25,7 @@ export class Signal {
 
   set value(value) {
     this.#value = value;
-    if (tracking) notify(this);
+    notify(this);
   }
 
   peek() {
@@ -47,7 +47,7 @@ export class Computed extends Signal {
   [compute]() {
     if (this.#invalid) return;
     this.#invalid = true;
-    if (tracking) notify(this);
+    notify(this);
   }
 
   /** @readonly @returns {T} */
@@ -137,7 +137,7 @@ export const effect = fn => {
 };
 
 const push = subscribers => {
-  if (tracking && stack) subscribers.add(stack);
+  if (stack) subscribers.add(stack);
 };
 
 const run = (state, callback) => {
@@ -156,8 +156,8 @@ export const signal = init => new Signal(init);
 
 /** @type {<T>(fn: () => T) => T} */
 export const untracked = fn => {
-  const before = tracking;
-  tracking = false; 
+  const before = stack;
+  stack = void 0; 
   try { return fn() }
-  finally { tracking = before }
+  finally { stack = before }
 };
