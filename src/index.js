@@ -140,10 +140,6 @@ export const effect = fn => {
   };
 };
 
-const forceTracking = value => {
-  tracking = value;
-};
-
 const notify = subscribers => {
   for (const subscriber of subscribers) subscriber[compute]();
 };
@@ -169,7 +165,7 @@ export const signal = init => new Signal(init);
 /** @type {<T>(fn: () => T) => T} */
 export const untracked = fn => {
   const before = tracking;
-  forceTracking(false); 
+  tracking = false; 
   try { return fn() }
-  finally { forceTracking(before) }
+  finally { tracking = before }
 };
