@@ -187,3 +187,44 @@ This utility basically runs updates and whatnot like *batch*, but it will never 
 
   </div>
 </details>
+
+
+## Differences from Preact Signals
+
+This module aims to be *Preact-like*, not a byte-for-byte or behavior-for-behavior clone of Preact Signals. The goal is to keep the core small, predictable, and easy to reason about, while still exposing `Signal` and `Computed` classes for projects that want to specialize any behavior.
+
+The following differences are intentional tradeoffs:
+
+  * assigning the same value still notifies subscribers. If you want distinct-value semantics, extend `Signal` and provide your own factory:
+
+```js
+import { Signal as WRSignal } from '@webreflection/signals';
+
+class Signal extends WRSignal {
+  get value() {
+    return super.value;
+  }
+
+  set value(value) {
+    if (!Object.is(this.peek(), value)) {
+      super.value = value;
+    }
+  }
+}
+
+export const signal = value => new Signal(value);
+```
+
+  * conditional dependencies are not pruned after every run. Instead, subscribers are kept by the signal or computed reference and are pruned lazily when that source notifies again, skipping disposed effects along the way. If a source is no longer referenced, normal garbage collection takes care of it; if it is still referenced, the next notification keeps the final value valid and fast enough to retrieve without maintaining a more complex dependency graph.
+
+  * mixed direct signal reads and derived computed reads can observe an intermediate stale computed value in the same effect, because there is no graph ordering involved. For example, reading both `count.value` and `doubled.value` where `doubled` is computed from `count` can briefly see the updated `count` with the previous `doubled` before the computed invalidation catches up. This is the little extra cost paid by a not-so-common scenario to keep the library as small as it is.
+
+  * `batch(callback)` coalesces execution, but it does not perform Preact's final-value reconciliation. This follows from the first point: signals do not compare old and new values, so `signal.value = signal.value` is still a notification. That can be a desirable pattern in some cases; for every other "don't do that" case, extend `Signal` as shown above.
+
+  * `effect(callback)` callbacks must return either `void` or a cleanup function, as specified by the TypeScript contract. Returning any other value is unsupported and will throw later if that value is invoked as cleanup.
+
+  * extra Preact APIs such as `subscribe`, `valueOf`, `toJSON`, and `action` are outside the minimal core. You can extend the exported classes to add the hooks that make sense for your project. Preact's `createModel` API surface is covered as much as this module needs by the explicit `@webreflection/signals/disposable` entry point and its `disposable` exported utility, so model-style disposal stays available when imported on purpose without being embedded into the default signals primitive.
+
+#### Please Note
+
+Because the public shape intentionally follows the Preact Signals API, this module can also be replaced by the real Preact Signals package whenever a project needs its full graph, helpers, or framework integrations. In that sense, it is meant to make the API familiar without forcing anyone to keep using this smaller implementation, or its intentional constraints, forever.
