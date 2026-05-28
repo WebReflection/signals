@@ -21,8 +21,6 @@
   },
   "exports": {
     ".": "./src/index.js",
-    "./brand": "./dist/branded.js",
-    "./branded": "./src/branded.js",
     "./disposable": "./src/disposable.js",
     "./disp": "./dist/disposable.js",
     "./dist": "./dist/signals.js",
@@ -34,13 +32,12 @@
     }
   },
   "scripts": {
-    "build": "npm run build:dist && npm run build:disp && npm run build:branded && npm run build:types && npm run test && npm run size",
-    "build:branded": "esbuild src/branded.js --bundle --minify --platform=neutral --format=esm --outfile=dist/branded.js",
+    "build": "npm run build:dist && npm run build:disp && npm run build:types && npm run test && npm run size",
     "build:dist": "esbuild src/index.js --bundle --minify --platform=neutral --format=esm --outfile=dist/signals.js",
     "build:disp": "esbuild src/disposable.js --bundle --minify --platform=neutral --format=esm --outfile=dist/disposable.js",
     "build:types": "tsc --allowJs --declaration --emitDeclarationOnly --stripInternal --outDir types --target es2022 --lib es2024 --module nodenext --moduleResolution nodenext src/*.js",
     "coverage": "mkdir -p ./coverage; c8 report --reporter=text-lcov > ./coverage/lcov.info",
-    "size": "echo 'signals'; cat dist/signals.js | brotli | wc -c; echo '\ndisposable'; cat dist/disposable.js | brotli | wc -c; echo '\nbranded'; cat dist/branded.js | brotli | wc -c",
+    "size": "echo 'signals'; cat dist/signals.js | brotli | wc -c; echo '\ndisposable'; cat dist/disposable.js | brotli | wc -c",
     "test": "c8 node --expose-gc test/coverage.js"
   },
   "keywords": [

@@ -1,8 +1,8 @@
 import { stack } from './stack.js';
-import { Effect, dispose } from './classes.js';
+import { Effect, batch, dispose } from './classes.js';
 
 /** @type {(fn: (() => void | (() => void))) => (() => void)} */
-export const effect = fn => {
+const effect = fn => {
   const fx = new Effect(fn);
   if (stack) stack.sub.push(fx);
   fx.run();
@@ -10,3 +10,5 @@ export const effect = fn => {
     if (!fx.disposed) dispose(fx);
   };
 };
+
+export { batch, effect };

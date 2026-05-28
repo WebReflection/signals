@@ -1,3 +1,4 @@
+export function dispose(fx: any): void;
 export class Signal {
     constructor(value: any);
     set value(value: any);
@@ -12,7 +13,6 @@ export class Computed extends Signal {
 }
 /** @type {<T>(fn: () => T) => T} */
 export const batch: <T>(fn: () => T) => T;
-export function dispose(fx: any): void;
 export class Effect {
     constructor(fn: any);
     disposed: boolean;

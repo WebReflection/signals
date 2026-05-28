@@ -1,8 +1,18 @@
 import { push, run, stack, tracking } from './stack.js';
 
+let batches, getValue, getSubscribers, setSubscribers, runComputed;
+
 const computed = Symbol();
 
-let batches, getValue, getSubscribers, setSubscribers, runComputed;
+const cleanUp = fx => {
+  fx.cleanup?.();
+  if (fx.sub.length) fx.sub.splice(0).forEach(dispose);
+};
+
+export const dispose = fx => {
+  fx.disposed = true;
+  cleanUp(fx);
+};
 
 const notify = subscribers => {
   for (const subscriber of subscribers) {
@@ -87,17 +97,6 @@ export const batch = fn => {
     }
   }
 };
-
-const cleanUp = fx => {
-  fx.cleanup?.();
-  if (fx.sub.length) fx.sub.splice(0).forEach(dispose);
-};
-
-export const dispose = fx => {
-  fx.disposed = true;
-  cleanUp(fx);
-};
-
 
 export class Effect {
   disposed = false;

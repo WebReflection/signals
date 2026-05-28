@@ -1,12 +1,12 @@
 import {
+  Signal, Computed,
   batch,
   computed,
   disposable,
   effect,
-  isSignal,
   signal,
   untracked,
-} from '../src/branded.js';
+} from '../src/disposable.js';
 
 const assert = (a, b, message) => {
   if (a !== b) {
@@ -22,8 +22,8 @@ const s3 = signal(3);
 const c1 = computed(() => (s1.value + s2.value));
 const c2 = computed(() => (s3.value + c1.value));
 
-assert(isSignal(s1), true, 's1 is a signal');
-assert(isSignal(c1), true, 'c1 is a signal');
+assert((s1 instanceof Signal), true, 's1 is a signal');
+assert((c1 instanceof Signal), true, 'c1 is a signal');
 
 assert(s1.value, 1, 's1.value === 1');
 assert(c1.value, 3, 'c1.value === 3');
