@@ -1,6 +1,16 @@
 import { push, tracking } from './stack.js';
 
-class Signal {
+let getValue, getSubscribers, setSubscribers;
+
+export class Signal {
+  static {
+    getValue = self => self.#value;
+    getSubscribers = self => self.#subscribers;
+    setSubscribers = (self, subscribers) => {
+      self.#subscribers = subscribers;
+    };
+  }
+
   #subscribers = new Set;
   #value;
 
@@ -24,6 +34,8 @@ class Signal {
     return this.#value;
   }
 }
+
+export { getValue, getSubscribers, setSubscribers };
 
 /** @type {<T>(init: T) => { value: T, peek: () => T }} */
 export const signal = init => new Signal(init);

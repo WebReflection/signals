@@ -1,33 +1,31 @@
 import { push, run } from './stack.js';
 
-class Computed {
-  #subscribers = new Set;
+import { Signal, getValue, getSubscribers, setSubscribers } from './signal.js';
+
+export class Computed extends Signal {
   #invalid = true;
 
-  #fn;
-  #value;
-
-  constructor(fn) { this.#fn = fn }
+  #result;
 
   get value() {
-    push(this.#subscribers);
+    push(getSubscribers(this));
     return this.peek();
   }
 
   $() {
     if (this.#invalid) return;
     this.#invalid = true;
-    const before = this.#subscribers;
-    this.#subscribers = new Set;
+    const before = getSubscribers(this);
+    setSubscribers(this, new Set);
     for (const state of before) state.$();
   }
 
   peek() {
     while (this.#invalid) {
       this.#invalid = false;
-      this.#value = run(this, this.#fn);
+      this.#result = run(this, getValue(this));
     }
-    return this.#value;
+    return this.#result;
   }
 }
 
