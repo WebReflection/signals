@@ -56,6 +56,7 @@ You know, nowadays it's hard to find libraries that are still 100% under control
 
 ![benchmark](https://raw.githubusercontent.com/WebReflection/usignal/main/test/benchmark.png)
 
+
 ## Architecture
 
 Fine-tuned signals are a piece of art:
@@ -69,7 +70,9 @@ Fine-tuned signals are a piece of art:
 
 That is all good and fine, yet the graph behind *signals* is, *imho*, pretty simple in theory (clearly hard in practice) ... and I will tell you how this module keeps that *simple* concept in mind.
 
-### Signals
+<details>
+  <summary><strong>Signals</strong></summary>
+  <div>
 
 These are just a *value wrapper*: you reach that *value*? You are subscribing to it. You change that *value*? You are triggering anything listening to that *signal* reference after subscribing.
 
@@ -77,7 +80,12 @@ That's it, that's the contract!
 
 Here, there is a `.peek()` method to avoid subscribing, but any time you access a `signal.value`, you are subscribing to it if you are either a *computed* reference or an *event* one.
 
-### Computed
+  </div>
+</details>
+
+<details>
+  <summary><strong>Computed</strong></summary>
+  <div>
 
 It's a `signal` by all means, because once you reach its `value`, it subscribes to any *subscriber*, just like any *signal* would do.
 
@@ -85,7 +93,12 @@ The main difference between *computed* and *signal* is that *computed* is a **re
 
 Everything else is the same: you cannot `computed.value = anything` but you can always retrieve `computed.value` to subscribe to that computed.
 
-### Effect
+  </div>
+</details>
+
+<details>
+  <summary><strong>Effect</strong></summary>
+  <div>
 
 This is the whole orchestration around *signals* or *computed* that makes anything **reactive**, but because it's a *bottom-up* situation we're dealing with, things might feel overly complicated. In theory, that's not the case.
 
@@ -150,11 +163,23 @@ Great questions. Here are the details about why that's never a concern:
 
 I am not sure you are still following, but because *effect* is a bottom-up problem, top-down is clearly the solution, and that's granted by the registration **stack**, where the outer *effect* runs before the *inner effect*. That solves everything!
 
+  </div>
+</details>
 
-### Batch
+<details>
+  <summary><strong>Batch</strong></summary>
+  <div>
 
 If you followed everything else I've explained around this architecture, `batch(callback)` simply represents a running *callback* with no instant reactivity, it simply accumulates changes and trigger after all changes happend for whatever effect was involved.
 
-### Untracked
+  </div>
+</details>
+
+<details>
+  <summary><strong>Untracked</strong></summary>
+  <div>
 
 This utility basically runs updates and whatnot like *batch*, but it will never register itself while doing that execution, resulting in a safe hook for foreign functions that wouldn't otherwise belong to our logic. They are just interested in our data instead, and that's fine!
+
+  </div>
+</details>
