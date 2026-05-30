@@ -1,7 +1,5 @@
 let batches, notify, stack, subscribers, value;
 
-const { dispose } = Symbol;
-
 /** @type {never} */
 const compute = Symbol();
 
@@ -37,8 +35,8 @@ export class Signal {
     return this.#value;
   }
 
-  [dispose]() {
-    this.#value = this.#subscribers.clear();
+  [Symbol.dispose]() {
+    this.#subscribers.clear();
   }
 }
 
@@ -54,10 +52,6 @@ export class Computed extends Signal {
     if (this.#invalid) return;
     this.#invalid = true;
     notify(this);
-  }
-
-  [dispose]() {
-    this.#result = super[dispose]();
   }
 
   /** @readonly @returns {T} */
