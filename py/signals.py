@@ -43,6 +43,12 @@ class Signal:
     def peek(self):
         return self._value
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self._subscribers = _SubscriberSet()
+
 
 class Computed(Signal):
     def __init__(self, fn):
@@ -121,6 +127,7 @@ def _cleanup(fx):
 def _dispose(fx):
     fx.disposed = True
     _cleanup(fx)
+    fx.cleanup = fx.fn = None
 
 
 def _run(state, callback):
