@@ -1,0 +1,4 @@
+name = "signals"
+
+[files]
+"./py/signals.py" = "./signals.py"
